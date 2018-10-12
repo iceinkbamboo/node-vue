@@ -10,7 +10,7 @@ app.all('*', function(req, res, next) {
   res.header("Access-Control-Allow-Methods","PUT,POST,GET,DELETE,OPTIONS");
   res.header("X-Powered-By",' 3.2.1');
   res.header("Content-Type", "application/json;charset=utf-8");
-  res.header('Access-Control-Allow-Headers', 'Content-Type');//添加此header解决，post请求报错Request header field Content-Type is not allowed by Access-Control-Allow-Headers in preflight response.
+  res.header('Access-Control-Allow-Headers', 'Content-Type');//添加此header解决"post请求报错Request header field Content-Type is not allowed by Access-Control-Allow-Headers in preflight response".
   next();
 });
 //处理post请求
