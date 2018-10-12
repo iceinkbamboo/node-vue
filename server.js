@@ -65,7 +65,7 @@ app.post('/login', function (req, res) {
 var connection = mysql.createConnection({
 host: 'localhost',
 user: 'root',
-password: 'zhsh217218',
+password: '123456',
 database: 'testsys',
 });
 app.listen(3000);
