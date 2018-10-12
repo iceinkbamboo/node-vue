@@ -69,7 +69,7 @@ app.post('/login', function (req, res) {
       res.send(error);
       return;
     }else{
-      res.send(obj);
+      res.send(results);
     }
   })
 })
