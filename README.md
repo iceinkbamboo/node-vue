@@ -76,10 +76,10 @@ app.post('/login', function (req, res) {
 
 # 创建连接
 var connection = mysql.createConnection({
-host: 'localhost', //数据库所在服务器ip
-user: 'root', //数据库用户名
-password: '123456', //数据库密码
-database: 'testsys', //连接的数据库名称
+  host: 'localhost', //数据库所在服务器ip
+  user: 'root', //数据库用户名
+  password: '123456', //数据库密码
+  database: 'testsys', //连接的数据库名称
 });
 app.listen(3000); //端口
 

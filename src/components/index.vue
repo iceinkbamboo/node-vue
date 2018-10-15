@@ -3,22 +3,37 @@
     <input v-model="firstName" />
     <input v-model="lastName" />
     <div class="fullName">{{fullName}}</div>
+    <div v-for="item in examList" v-bind:key="item">{{item}}</div>
   </div>
 </template>
 
 <script>
+const axios = require('axios')
 export default {
   name: 'index',
   data () {
     return {
       firstName: 'jim',
-      lastName: 'blank'
+      lastName: 'blank',
+      examList: []
     }
   },
   computed: {
     fullName: function () {
       return this.firstName + this.lastName
     }
+  },
+  created () {
+    var that = this
+    axios.get('http://localhost:3000/getExamList', {}).then(function (response) {
+      var data = response.data
+      that.examList = data
+    }).catch(function (error) {
+      console.log(error)
+    }).then(function () {
+    })
+  },
+  methods: {
   }
 }
 </script>
