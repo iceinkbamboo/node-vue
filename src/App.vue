@@ -29,4 +29,5 @@ body{
   text-align: center;
   color: #2c3e50;
 }
+html,body,#app {height: 100%;}
 </style>

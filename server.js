@@ -57,7 +57,6 @@ app.post('/verifyAccount', function (req, res) {
           data:{
             userStatus: 2
           }
-
         }
       }
       res.send(obj);
@@ -114,30 +113,76 @@ app.post('/regist', function (req, res) {
 
 //获取题目类型列表
 app.get('/getExamList', function (req,res) {
-  connection.query("select * from exam",
+  connection.query("select type from exam where examid in(select examid from topic) order by type",
   function(error,results,field){
     if(error){
       res.send(error);
       return;
     }else{
-      let arr = [];
+      let arr = [],arr1 = [],arr2 = [], arr3 = [],arr4 = [];
       for(var i = 0; i < results.length; i++){
-        if(arr.length == 0){
-          arr.push(results[i].type);
-        }else{
-          for(var j = 0; j < arr.length; j++){
-            if(arr[j] == results[i].type){
-              break;
-            }
-            if(j == arr.length - 1){
-              arr.push(results[i].type);
-            }
-          }
+        switch(results[i].type){
+          case 1:
+            arr1.push(results[i].examid);
+            break;
+          case 2:
+            arr2.push(results[i].examid);
+            break;
+          case 3:
+            arr3.push(results[i].examid);
+            break;
+          case 4:
+            arr4.push(results[i].examid);
+            break;
+          default: 
+            break;
         }
       }
+      arr.push({
+        type: 1,
+        num: arr1.length
+      })
+      arr.push({
+        type: 2,
+        num: arr2.length
+      })
+      arr.push({
+        type: 3,
+        num: arr3.length
+      })
+      arr.push({
+        type: 4,
+        num: arr4.length
+      })
       res.send(arr);
     }
   })
+})
+
+// 获取试卷
+app.get('/exam', function(req, res) {
+  connection.query("select * from exam where type = " + req.query.type,
+    function(error, results, fields) {
+      if (error) {
+        res.send(error);
+        return;
+      } else {
+        res.send(results)
+      }
+  });
+})
+
+// 获取试卷题目
+app.get('/topic', function(req, res) {
+  connection.query("select * from topic where examid = " + req.query.examid,
+    function(error, results, fields) {
+      if (error) {
+        res.send(error);
+        return;
+      } else {
+        res.send(results)
+      }
+  });
 })
 
 // 创建连接
