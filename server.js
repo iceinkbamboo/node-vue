@@ -185,6 +185,57 @@ app.get('/topic', function(req, res) {
   });
 })
 
+//提交答题结果
+app.post('/answer', function (req, res) {
+  connection.query("select examid from result where userid='" + req.body.userid + "' and examid= '" + req.body.examid + "'",
+  function (error, results, fields) {
+    if(error){
+      res.send(error)
+      return;
+    }else{
+      if(results.length == 0){
+        connection.query("insert into result(uid,userid,examid,score,heightscore,results,time)values(uuid(),'"+ req.body.userid +"','"+ req.body.examid +"','"+ req.body.score +"','"+ req.body.score +"','"+ req.body.result +"',now())",
+        function (error, results, fields) {
+          if(error){
+            res.send(error)
+            return;
+          }else{
+            res.send({
+              stat: 1,
+              message: '提交成功'
+            })
+          }
+        })
+      }else{
+        connection.query("update result set score='"+ req.body.score +"',heightscore=case when heightscore < " + req.body.score + " then '"+ req.body.score +"' else heightscore end,results='"+ req.body.result +"',time=now() where userid ='"+ req.body.userid +"' and examid='"+ req.body.examid +"'",
+        function (error, results, fields) {
+          if(error){
+            res.send(error)
+            return;
+          }else{
+            res.send({
+              stat: 1,
+              message: '提交成功'
+            })
+          }
+        })
+      }
+    }
+  })
+})
+
+//获取答案结果
+app.post('/result', function(req, res){
+  connection.query("select * from result where userid='"+ req.body.userid +"' and examid='"+ req.body.examid +"'",
+  function(error, results, fields){
+    if(error){
+      res.send(error)
+    }else{
+      res.send(results)
+    }
+  })
+})
+
 // 创建连接
 var connection = mysql.createConnection({
   host: 'localhost',

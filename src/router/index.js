@@ -4,6 +4,7 @@ import index from '@/components/index'
 import login from '@/components/login'
 import topicList from '@/components/topicList'
 import topic from '@/components/topic'
+import result from '@/components/result'
 
 Vue.use(Router)
 
@@ -29,6 +30,11 @@ export default new Router({
       path: '/topic/:examid',
       name: 'topic',
       component: topic
+    },
+    {
+      path: '/result/:examid',
+      name: 'result',
+      component: result
     }
   ]
 })

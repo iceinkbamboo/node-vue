@@ -24,7 +24,7 @@ export default{
       topicIndex: 0, // 当前题目的序号
       buttonText: '下一题',
       selectOption: '',
-      myAnswer: []
+      result: []
     }
   },
   created () {
@@ -33,6 +33,7 @@ export default{
     axios.get('http://localhost:3000/topic?examid=' + that.examid).then(function (response) {
       var data = response.data
       that.topic = data
+      that.buttonText = data.length > 1 ? '下一题' : '提交答案'
     }).catch(function (error) {
       console.log(error)
     }).then(function () {
@@ -40,14 +41,44 @@ export default{
   },
   methods: {
     next: function (examid) {
+      var that = this
       let len = this.topic.length
       let topicIndex = this.topicIndex
-      if (topicIndex === len) {
-        return false
+      // 计算结果
+      let score = 0
+      if (this.selectOption === this.topic[topicIndex].answer) {
+        score = 10
       }
-      this.myAnswer.push(this.selectOption)
+      let answer = {
+        topicid: this.topic[topicIndex].topicid,
+        answer: this.topic[topicIndex].answer,
+        myAnswer: this.selectOption,
+        score: score
+      }
+      this.result.push(answer)
       if (topicIndex === len - 1) {
         // 试卷完成
+        let score = 0
+        for (let i = 0; i < this.result.length; i++) {
+          score += this.result[i].score
+        }
+        console.log(localStorage.userid, this.examid, this.result, score)
+        axios.post('http://localhost:3000/answer', {
+          userid: localStorage.userid,
+          examid: that.examid,
+          result: JSON.stringify(that.result),
+          score: score
+        }).then(function (response) {
+          var data = response.data
+          console.log(data)
+          if (data.stat === 1) {
+            // 提交成功，跳转到结果页
+            that.$router.push({name: 'result', params: {examid: that.examid}})
+          }
+        }).catch(function (error) {
+          console.log(error)
+        }).then(function () {
+        })
         return false
       }
       if (topicIndex === len - 2) {
